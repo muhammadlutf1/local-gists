@@ -151,6 +151,8 @@ components:
 paths:
   /gists:
     get:
+      tags:
+        - Gists
       summary: "Get all gists"
       responses:
         200:
@@ -163,6 +165,8 @@ paths:
                   $ref: "#/components/schemas/GistInfo"
 
     post:
+      tags:
+        - Gists
       summary: Create a new gist
       requestBody:
         required: true
@@ -180,6 +184,8 @@ paths:
 
   /gists/{id}:
     get:
+      tags:
+        - Gists
       summary: Get a specific gist data by id
       parameters:
         - name: id
@@ -196,6 +202,8 @@ paths:
                 $ref: "#/components/schemas/Gist"
 
     patch:
+      tags:
+        - Gists
       summary: Update basic info for a gist
       description: "Only title, slug and description can be updated.\nFiles and comments have their own endpoints"
       parameters:
@@ -219,6 +227,8 @@ paths:
                 $ref: "#/components/schemas/Gist"
 
     delete:
+      tags:
+        - Gists
       summary: Delete a gist
       parameters:
         - name: id
@@ -232,6 +242,8 @@ paths:
 
   /gists/{id}/files:
     post:
+      tags:
+        - Files
       summary: Add files to a gist
       parameters:
         - name: id
@@ -261,6 +273,8 @@ paths:
               schema:
                 $ref: "#/components/schemas/Gist"
     put:
+      tags:
+        - Files
       summary: Update files for a gist
       description: "Bulk Updates (Overwrites) all files for a gist"
       parameters:
@@ -293,6 +307,8 @@ paths:
 
   /gists/{id}/files/{filename}:
     patch:
+      tags:
+        - Files
       summary: Update a file in a gist
       parameters:
         - name: id
@@ -319,6 +335,8 @@ paths:
               schema:
                 $ref: "#/components/schemas/Gist"
     delete:
+      tags:
+        - Files
       summary: Delete a file in a gist
       parameters:
         - name: id
@@ -337,6 +355,8 @@ paths:
 
   /gists/{id}/comments:
     post:
+      tags:
+        - Comments
       summary: Add comment to a gist
       parameters:
         - name: id
@@ -361,6 +381,8 @@ paths:
 
   /gists/{id}/comments/{commentId}:
     put:
+      tags:
+        - Comments
       summary: Update a comment in a gist
       parameters:
         - name: id
@@ -389,6 +411,8 @@ paths:
                 $ref: "#/components/schemas/Gist"
 
     delete:
+      tags:
+        - Comments
       summary: Delete comment from a gist
       parameters:
         - name: id
