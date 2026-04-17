@@ -253,6 +253,13 @@ paths:
                     required:
                       - filename
                       - content
+      responses:
+        201:
+          description: "Returns updated gist full data"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Gist"
     put:
       summary: Update files for a gist
       description: "Bulk Updates (Overwrites) all files for a gist"
