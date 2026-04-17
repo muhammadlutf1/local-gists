@@ -1,0 +1,399 @@
+openapi: "3.0.3"
+info:
+  title: local-gists
+  description: Local clone of github gists
+  version: "1.0.0"
+servers:
+  - url: http://localhost:5000
+    description: Dev
+
+components:
+  schemas:
+    Dates:
+      type: object
+      properties:
+        createdAt:
+          type: integer
+          format: int64
+        updatedAt:
+          type: integer
+          format: int64
+
+    File:
+      type: object
+      required:
+        - filename
+        - content
+      allOf:
+        - type: object
+          properties:
+            gistId:
+              type: integer
+            filename:
+              type: string
+            content:
+              type: string
+        - $ref: "#/components/schemas/Dates"
+
+    FileSubmission:
+      type: object
+      minProperties: 1
+      properties:
+        filename:
+          type: string
+        content:
+          type: string
+
+    Comment:
+      type: object
+      required:
+        - content
+        - commentId
+      allOf:
+        - type: object
+          properties:
+            commentId:
+              type: integer
+            gistId:
+              type: integer
+            content:
+              type: string
+        - $ref: "#/components/schemas/Dates"
+
+    CommentSubmission:
+      type: object
+      required:
+        - content
+      properties:
+        content:
+          type: string
+
+    Gist:
+      type: object
+      allOf:
+        - type: object
+          properties:
+            id:
+              type: integer
+            title:
+              type: string
+            description:
+              type: string
+            slug:
+              type: string
+            files:
+              type: array
+              minItems: 1
+              items:
+                $ref: "#/components/schemas/File"
+            filesCount:
+              type: integer
+            commentsCount:
+              type: integer
+            comments:
+              type: array
+              items:
+                $ref: "#/components/schemas/Comment"
+        - $ref: "#/components/schemas/Dates"
+
+    GistInfo:
+      allOf:
+        - type: object
+          properties:
+            id:
+              type: integer
+            title:
+              type: string
+            slug:
+              type: string
+            filesCount:
+              type: integer
+            commentsCount:
+              type: integer
+            files:
+              type: array
+              minItems: 1
+              maxItems: 1
+              items:
+                $ref: "#/components/schemas/File"
+        - $ref: "#/components/schemas/Dates"
+
+    GistSubmission:
+      type: object
+      required:
+        - title
+        - slug
+        - files
+      properties:
+        title:
+          type: string
+        slug:
+          type: string
+        description:
+          type: string
+        files:
+          type: array
+          minItems: 1
+          items:
+            $ref: "#/components/schemas/FileSubmission"
+
+    GistUpdate:
+      type: object
+      minProperties: 1
+      properties:
+        title:
+          type: string
+        slug:
+          type: string
+        description:
+          type: string
+
+paths:
+  /gists:
+    get:
+      summary: "Get all gists"
+      responses:
+        200:
+          description: "Returns list of gists"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/GistInfo"
+
+    post:
+      summary: Create a new gist
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GistSubmission"
+      responses:
+        201:
+          description: "Returns new gist full data"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Gist"
+
+  /gists/{id}:
+    get:
+      summary: Get a specific gist data by id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: "Returns full gist data"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Gist"
+
+    patch:
+      summary: Update basic info for a gist
+      description: "Only title, slug and description can be updated.\nFiles and comments have their own endpoints"
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GistUpdate"
+      responses:
+        200:
+          description: "Returns updated gist full data"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Gist"
+
+    delete:
+      summary: Delete a gist
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        204:
+          description: "No content"
+
+  /gists/{id}/files:
+    post:
+      summary: Add files to a gist
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              minItems: 1
+              items:
+                allOf:
+                  - $ref: "#/components/schemas/FileSubmission"
+                  - type: object
+                    required:
+                      - filename
+                      - content
+    put:
+      summary: Update files for a gist
+      description: "Bulk Updates (Overwrites) all files for a gist"
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              minItems: 1
+              items:
+                allOf:
+                  - $ref: "#/components/schemas/FileSubmission"
+                  - type: object
+                    required:
+                      - filename
+                      - content
+      responses:
+        201:
+          description: "Returns updated gist full data"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Gist"
+
+  /gists/{id}/files/{filename}:
+    patch:
+      summary: Update a file in a gist
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: filename
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FileSubmission"
+      responses:
+        200:
+          description: "Returns updated gist full data"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Gist"
+    delete:
+      summary: Delete a file in a gist
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: filename
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        204:
+          description: "No content"
+
+  /gists/{id}/comments:
+    post:
+      summary: Add comment to a gist
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CommentSubmission"
+
+      responses:
+        201:
+          description: "Returns updated gist full data"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Gist"
+
+  /gists/{id}/comments/{commentId}:
+    put:
+      summary: Update a comment in a gist
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: commentId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CommentSubmission"
+
+      responses:
+        200:
+          description: "Returns updated gist full data"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Gist"
+
+    delete:
+      summary: Delete comment from a gist
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: commentId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        204:
+          description: "No content"
