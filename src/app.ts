@@ -1,14 +1,24 @@
 import express from "express";
 import { join } from "path";
 import OpenApiValidator from "express-openapi-validator";
+import { apiReference } from "@scalar/express-api-reference";
 import type { Application, Request, Response, NextFunction } from "express";
 
 const app: Application = express();
 
 app.use(express.json());
+
+const specPath = join(import.meta.dirname, "docs", "spec.yaml");
+app.use("/docs/spec", express.static(specPath));
+app.use(
+  "/docs",
+  apiReference({
+    url: "/docs/spec",
+  }),
+);
 app.use(
   OpenApiValidator.middleware({
-    apiSpec: join(import.meta.dirname, "docs", "spec.yaml"),
+    apiSpec: specPath,
   }),
 );
 
