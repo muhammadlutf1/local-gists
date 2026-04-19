@@ -6,3 +6,33 @@ generator client {
 datasource db {
   provider = "sqlite"
 }
+
+model Gist {
+  id Int @id @default(autoincrement())
+  title String
+  slug String
+  description String @default("")
+  files File[]
+  comments Comment[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model File {
+  filename String 
+  content String @default("")
+  gist      Gist     @relation(fields: [gistId], references: [id], onDelete: Cascade)
+  gistId Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  @@id([gistId, filename])
+}
+
+model Comment { 
+  id Int @id @default(autoincrement())
+  content String
+  gist      Gist     @relation(fields: [gistId], references: [id], onDelete: Cascade)
+  gistId Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

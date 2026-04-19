@@ -1,0 +1,31 @@
+-- CreateTable
+CREATE TABLE "Gist" (
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "title" TEXT NOT NULL,
+    "slug" TEXT NOT NULL,
+    "description" TEXT NOT NULL DEFAULT '',
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" DATETIME NOT NULL
+);
+
+-- CreateTable
+CREATE TABLE "File" (
+    "filename" TEXT NOT NULL,
+    "content" TEXT NOT NULL DEFAULT '',
+    "gistId" INTEGER NOT NULL,
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" DATETIME NOT NULL,
+
+    PRIMARY KEY ("gistId", "filename"),
+    CONSTRAINT "File_gistId_fkey" FOREIGN KEY ("gistId") REFERENCES "Gist" ("id") ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+-- CreateTable
+CREATE TABLE "Comment" (
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "content" TEXT NOT NULL,
+    "gistId" INTEGER NOT NULL,
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" DATETIME NOT NULL,
+    CONSTRAINT "Comment_gistId_fkey" FOREIGN KEY ("gistId") REFERENCES "Gist" ("id") ON DELETE CASCADE ON UPDATE CASCADE
+);

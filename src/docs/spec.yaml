@@ -38,6 +38,8 @@ components:
     FileSubmission:
       type: object
       minProperties: 1
+      required:
+        - filename
       properties:
         filename:
           type: string
@@ -48,11 +50,11 @@ components:
       type: object
       required:
         - content
-        - commentId
+        - id
       allOf:
         - type: object
           properties:
-            commentId:
+            id:
               type: integer
             gistId:
               type: integer
@@ -86,10 +88,6 @@ components:
               minItems: 1
               items:
                 $ref: "#/components/schemas/File"
-            filesCount:
-              type: integer
-            commentsCount:
-              type: integer
             comments:
               type: array
               items:
