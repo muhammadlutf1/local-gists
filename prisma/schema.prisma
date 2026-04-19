@@ -10,7 +10,7 @@ datasource db {
 model Gist {
   id Int @id @default(autoincrement())
   title String
-  slug String
+  slug String @unique
   description String @default("")
   files File[]
   comments Comment[]
