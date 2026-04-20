@@ -1,8 +1,11 @@
 import e from "express";
 import type { Router } from "express";
+import { createGist, getAllGists } from "../controllers/gists.ts";
 
-const router: Router = e.Router();
+const gists: Router = e.Router();
 
-router.get("/", (_, res) => res.send("Hello World"));
+gists.get("/", getAllGists);
 
-export default router;
+gists.post("/", createGist);
+
+export default gists;
