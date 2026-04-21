@@ -17,7 +17,6 @@
     "@prisma/adapter-pg": "^7.7.0",
     "@prisma/client": "^7.7.0",
     "@scalar/express-api-reference": "^0.9.8",
-    "dotenv": "^17.4.2",
     "express": "^5.2.1",
     "express-openapi-validator": "^5.6.2",
     "slugify": "^1.6.9",
@@ -27,6 +26,7 @@
     "@types/better-sqlite3": "^7.6.13",
     "@types/express": "^5.0.6",
     "@types/supertest": "^7.2.0",
+    "dotenv": "^17.4.2",
     "prisma": "^7.7.0",
     "supertest": "^7.2.2",
     "vitest": "^4.1.4"
