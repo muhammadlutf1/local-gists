@@ -3,6 +3,7 @@ import slugify from "slugify";
 import { Prisma } from "../prisma/client.ts";
 import type { Request, Response } from "express";
 import type { GistSubmission } from "../types/index.ts";
+import { error } from "node:console";
 
 export async function getAllGists(req: Request, res: Response) {
   const gists = await Gist.findAll();
@@ -13,6 +14,13 @@ export async function getAllGists(req: Request, res: Response) {
 export async function createGist(req: Request, res: Response) {
   const data: GistSubmission = req.body;
   const slug = slugify(req.body.title);
+
+  if (data.title.trim().length === 0)
+    throw {
+      status: 400,
+      message: "title can't be empty spaces",
+      errors: [{ path: "/body/title", message: "can't be empty spaces" }],
+    };
 
   try {
     const gist = await Gist.create({ ...data, slug });
@@ -30,6 +38,6 @@ export async function createGist(req: Request, res: Response) {
             },
           ],
         };
-    }
+    } else throw error;
   }
 }
