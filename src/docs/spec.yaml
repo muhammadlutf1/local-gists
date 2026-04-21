@@ -157,6 +157,21 @@ components:
         description:
           type: string
 
+    Error:
+      type: object
+      properties:
+        message:
+          type: string
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              path:
+                type: string
+              message:
+                type: string
+
 paths:
   /gists:
     get:
@@ -190,6 +205,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Gist"
+        409:
+          description: "A Gist with same title already exists"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
 
   /gists/{id}:
     get:

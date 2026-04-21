@@ -1,5 +1,6 @@
 import Gist from "../db/gist.model.ts";
 import slugify from "slugify";
+import { Prisma } from "../prisma/client.ts";
 import type { Request, Response } from "express";
 import type { GistSubmission } from "../types/index.ts";
 
@@ -17,6 +18,18 @@ export async function createGist(req: Request, res: Response) {
     const gist = await Gist.create({ ...data, slug });
     res.status(201).json(gist);
   } catch (error) {
-    console.log(error); // TODO: handle slug already exists error response
+    if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      if (error.code === "P2002")
+        throw {
+          status: 409,
+          message: "A Gist with same title already exists",
+          errors: [
+            {
+              path: "/body/title",
+              message: "must be unique",
+            },
+          ],
+        };
+    }
   }
 }
