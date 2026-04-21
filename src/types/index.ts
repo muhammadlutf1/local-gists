@@ -17,8 +17,10 @@ export type GistSubmission = Pick<Gist, "title"> & {
 export type GistSubmissionWithSlug = GistSubmission & Pick<Gist, "slug">;
 
 export type GistInfo = Omit<Gist, "comments"> & {
-  filesCount: number;
-  commentsCount: number;
+  _count: {
+    files: number;
+    comments: number;
+  };
 };
 
 export type Comment = C;

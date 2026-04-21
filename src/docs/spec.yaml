@@ -118,16 +118,19 @@ components:
             slug:
               type: string
               readOnly: true
-            filesCount:
-              type: integer
-            commentsCount:
-              type: integer
             files:
               type: array
               minItems: 1
               maxItems: 1
               items:
                 $ref: "#/components/schemas/File"
+            _count:
+              type: object
+              properties:
+                files:
+                  type: integer
+                comments:
+                  type: integer
         - $ref: "#/components/schemas/Dates"
 
     GistSubmission:
