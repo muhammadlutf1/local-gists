@@ -40,6 +40,16 @@ export default {
           },
         },
       },
+      select: {
+        id: true,
+        title: true,
+        slug: true,
+        description: true,
+        createdAt: true,
+        updatedAt: true,
+        files: true,
+        comments: true,
+      },
     });
   },
 };

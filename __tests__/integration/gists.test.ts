@@ -63,3 +63,52 @@ describe("GET /gists", () => {
     expect(testGist._count.comments).toBe(3);
   });
 });
+
+describe("POST /gists", () => {
+  it("returns 400 when sending invalid data (Schema Validation)", async () => {
+    const response = await request(app).post("/gists").send({});
+    // Handled by express-openapi-validator
+    expect(response.status).toBe(400);
+    expect(response.body.errors).toBeDefined();
+  });
+
+  it("creates and returns a new gist", async () => {
+    const response = await request(app)
+      .post("/gists")
+      .send({
+        title: "GiSt 1",
+        description: "Gist 1 description",
+        files: [
+          { filename: "file-1", content: "File 1 content" },
+          { filename: "file-2", content: "File 2 content" },
+        ],
+      });
+
+    expect(response.status).toBe(201);
+    expect(response.body.title).toBe("GiSt 1");
+    expect(response.body.slug).toBe("GiSt-1");
+    expect(response.body.files).toHaveLength(2);
+    expect(response.body.comments).toHaveLength(0);
+  });
+
+  it("returns 409 when gist with same title already exists", async () => {
+    await prisma.gist.create({
+      data: {
+        title: "test gist",
+        slug: "test-gist",
+        files: {
+          create: { filename: "test-file" },
+        },
+      },
+    });
+
+    const response = await request(app)
+      .post("/gists")
+      .send({
+        title: "test gist",
+        files: [{ filename: "some-other-file" }],
+      });
+
+    expect(response.status).toBe(409);
+  });
+});
