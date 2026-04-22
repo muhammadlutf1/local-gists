@@ -22,6 +22,9 @@ export default {
           },
         },
       },
+      orderBy: {
+        createdAt: "asc",
+      },
     });
   },
 
