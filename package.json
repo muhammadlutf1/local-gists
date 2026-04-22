@@ -5,7 +5,7 @@
   "main": "src/index.ts",
   "type": "module",
   "scripts": {
-    "pretest": "npx dotenv -e .env.test -- npx prisma db push",
+    "pretest": "dotenv -e .env.test -- pnpm prisma db push",
     "test": "vitest",
     "start": "node --env-file=.env src/index.ts",
     "dev": "node --env-file=.env --watch src/index.ts"
@@ -28,6 +28,7 @@
     "@types/express": "^5.0.6",
     "@types/supertest": "^7.2.0",
     "dotenv": "^17.4.2",
+    "dotenv-cli": "^11.0.0",
     "prisma": "^7.7.0",
     "supertest": "^7.2.2",
     "vitest": "^4.1.4"
