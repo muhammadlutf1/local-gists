@@ -147,3 +147,36 @@ describe("GET /gists/{id}", () => {
     expect(response.body.comments).toHaveLength(0);
   });
 });
+
+describe("PATCH /gists/{id}", () => {
+  beforeEach(async () => {
+    await prisma.gist.deleteMany();
+  });
+
+  it("returns 400 when sending invalid data (Schema Validation)", async () => {
+    const response = await request(app).patch("/gists/1").send({ title: "" });
+    expect(response.status).toBe(400);
+    expect(response.body.errors).toBeDefined();
+  });
+
+  it("updates a given field of a gist", async () => {
+    const gist = await prisma.gist.create({
+      data: {
+        title: "test gist",
+        slug: "test-gist",
+        files: {
+          create: { filename: "test-file" },
+        },
+      },
+    });
+
+    const response = await request(app)
+      .patch(`/gists/${gist.id}`)
+      .send({ title: "new title" });
+
+    expect(response.body.title).toBe("new title");
+    expect(response.body.slug).toBe("new-title");
+    expect(response.body.files).toHaveLength(1);
+    expect(response.body.comments).toHaveLength(0);
+  });
+});

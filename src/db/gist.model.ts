@@ -1,5 +1,9 @@
 import prisma from "../db/client.ts";
-import type { Gist, GistSubmissionWithSlug } from "../types/index.ts";
+import type {
+  Gist,
+  GistSubmissionWithSlug,
+  GistInfoUpdate,
+} from "../types/index.ts";
 
 export default {
   async findAll() {
@@ -56,6 +60,23 @@ export default {
           },
         },
       },
+      select: {
+        id: true,
+        title: true,
+        slug: true,
+        description: true,
+        createdAt: true,
+        updatedAt: true,
+        files: true,
+        comments: true,
+      },
+    });
+  },
+
+  async update(id: Gist["id"], data: GistInfoUpdate) {
+    return prisma.gist.update({
+      where: { id },
+      data,
       select: {
         id: true,
         title: true,

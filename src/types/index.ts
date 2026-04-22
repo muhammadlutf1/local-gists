@@ -23,6 +23,10 @@ export type GistInfo = Omit<Gist, "comments"> & {
   };
 };
 
+export type GistInfoUpdate = Partial<
+  Pick<GistInfo, "title" | "description" | "slug">
+>;
+
 export type Comment = C;
 
 export type CommentSubmission = Pick<Comment, "content">;

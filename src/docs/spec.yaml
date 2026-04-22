@@ -270,6 +270,18 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Gist"
+        400:
+          description: "Bad request"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        404:
+          description: "Gist not found"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
 
     delete:
       tags:
