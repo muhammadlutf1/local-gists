@@ -65,6 +65,10 @@ describe("GET /gists", () => {
 });
 
 describe("POST /gists", () => {
+  beforeEach(async () => {
+    await prisma.gist.deleteMany();
+  });
+
   it("returns 400 when sending invalid data (Schema Validation)", async () => {
     const response = await request(app).post("/gists").send({});
     // Handled by express-openapi-validator
