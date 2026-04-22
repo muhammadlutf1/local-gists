@@ -13,12 +13,12 @@ components:
       type: object
       properties:
         createdAt:
-          type: integer
-          format: int64
+          type: string
+          format: date-time
           readOnly: true
         updatedAt:
-          type: integer
-          format: int64
+          type: string
+          format: date-time
           readOnly: true
 
     File:
