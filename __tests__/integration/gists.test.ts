@@ -1,0 +1,65 @@
+import { describe, it, expect, beforeEach } from "vitest";
+import request from "supertest";
+import app from "../../src/app.ts";
+import prisma from "../../src/db/client.ts";
+
+describe("GET /gists", () => {
+  beforeEach(async () => {
+    await prisma.gist.deleteMany();
+  });
+
+  it("returns empty array when no gists exist", async () => {
+    const response = await request(app).get("/gists");
+    expect(response.body).toEqual([]);
+  });
+
+  it("returns array of all gists as GistInfo", async () => {
+    await Promise.all([
+      prisma.gist.create({
+        data: {
+          title: "Gist 1",
+          slug: "gist-1",
+          description: "Gist 1 description",
+          files: {
+            createMany: {
+              data: [
+                { filename: "file-1", content: "File 1 content" },
+                { filename: "file-2", content: "File 2 content" },
+              ],
+            },
+          },
+          comments: {
+            createMany: {
+              data: [
+                { content: "Comment 1 content" },
+                { content: "Comment 2 content" },
+                { content: "Comment 3 content" },
+              ],
+            },
+          },
+        },
+      }),
+      prisma.gist.create({
+        data: {
+          title: "Gist 2",
+          slug: "gist-2",
+          files: {
+            create: {
+              filename: "file-1",
+            },
+          },
+        },
+      }),
+    ]);
+
+    const response = await request(app).get("/gists");
+    const testGist = response.body[0];
+
+    expect(response.body).toHaveLength(2);
+    expect(testGist.slug).toBe("gist-1");
+    expect(testGist.files).toHaveLength(1);
+    expect(testGist.files[0].filename).toBe("file-1");
+    expect(testGist._count.files).toBe(2);
+    expect(testGist._count.comments).toBe(3);
+  });
+});
