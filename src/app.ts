@@ -20,6 +20,7 @@ app.use(
 app.use(
   OpenApiValidator.middleware({
     apiSpec: specPath,
+    validateResponses: true,
   }),
 );
 
