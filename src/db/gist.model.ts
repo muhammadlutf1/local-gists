@@ -13,6 +13,7 @@ export default {
         updatedAt: true,
         files: {
           take: 1,
+          orderBy: [{ createdAt: "asc" }, { filename: "asc" }],
         },
         _count: {
           select: {
