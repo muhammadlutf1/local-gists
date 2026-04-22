@@ -3,7 +3,6 @@ import slugify from "slugify";
 import { Prisma } from "../prisma/client.ts";
 import type { Request, Response } from "express";
 import type { GistSubmission } from "../types/index.ts";
-import { error } from "node:console";
 
 export async function getAllGists(req: Request, res: Response) {
   const gists = await Gist.findAll();
@@ -40,4 +39,21 @@ export async function createGist(req: Request, res: Response) {
         };
     } else throw error;
   }
+}
+
+export async function getGist(req: Request, res: Response) {
+  const { id } = req.params;
+  const gist = await Gist.findOne(Number(id));
+  if (!gist)
+    throw {
+      status: 404,
+      message: "Gist not found",
+      errors: [
+        {
+          path: "/params/id",
+          message: "No gist found with given id",
+        },
+      ],
+    };
+  res.status(200).json(gist);
 }
