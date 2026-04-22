@@ -5,13 +5,14 @@
   "main": "src/index.ts",
   "type": "module",
   "scripts": {
+    "pretest": "npx dotenv -e .env.test -- npx prisma db push",
     "test": "vitest",
     "start": "node --env-file=.env src/index.ts",
     "dev": "node --env-file=.env --watch src/index.ts"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "packageManager": "pnpm@10.33.0",
   "dependencies": {
     "@prisma/adapter-pg": "^7.7.0",
