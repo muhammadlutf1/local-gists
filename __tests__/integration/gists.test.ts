@@ -179,4 +179,11 @@ describe("PATCH /gists/{id}", () => {
     expect(response.body.files).toHaveLength(1);
     expect(response.body.comments).toHaveLength(0);
   });
+
+  it("returns 404 when no gist exist with given id", async () => {
+    const response = await request(app)
+      .patch("/gists/1")
+      .send({ title: "test" });
+    expect(response.status).toBe(404);
+  });
 });
