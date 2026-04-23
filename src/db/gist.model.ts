@@ -42,7 +42,9 @@ export default {
         description: true,
         createdAt: true,
         updatedAt: true,
-        files: true,
+        files: {
+          orderBy: [{ createdAt: "asc" }, { filename: "asc" }],
+        },
         comments: true,
       },
     });
