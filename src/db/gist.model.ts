@@ -8,16 +8,15 @@ import type {
 export default {
   async findAll() {
     return prisma.gist.findMany({
-      select: {
-        id: true,
-        title: true,
-        slug: true,
-        description: true,
-        createdAt: true,
-        updatedAt: true,
+      include: {
         files: {
           take: 1,
           orderBy: [{ createdAt: "asc" }, { filename: "asc" }],
+        },
+        comments: {
+          orderBy: {
+            createdAt: "asc",
+          },
         },
         _count: {
           select: {
@@ -35,17 +34,15 @@ export default {
   async findOne(id: Gist["id"]) {
     return prisma.gist.findUnique({
       where: { id },
-      select: {
-        id: true,
-        title: true,
-        slug: true,
-        description: true,
-        createdAt: true,
-        updatedAt: true,
+      include: {
         files: {
           orderBy: [{ createdAt: "asc" }, { filename: "asc" }],
         },
-        comments: true,
+        comments: {
+          orderBy: {
+            createdAt: "asc",
+          },
+        },
       },
     });
   },
@@ -62,15 +59,15 @@ export default {
           },
         },
       },
-      select: {
-        id: true,
-        title: true,
-        slug: true,
-        description: true,
-        createdAt: true,
-        updatedAt: true,
-        files: true,
-        comments: true,
+      include: {
+        files: {
+          orderBy: [{ createdAt: "asc" }, { filename: "asc" }],
+        },
+        comments: {
+          orderBy: {
+            createdAt: "asc",
+          },
+        },
       },
     });
   },
@@ -79,15 +76,15 @@ export default {
     return prisma.gist.update({
       where: { id },
       data,
-      select: {
-        id: true,
-        title: true,
-        slug: true,
-        description: true,
-        createdAt: true,
-        updatedAt: true,
-        files: true,
-        comments: true,
+      include: {
+        files: {
+          orderBy: [{ createdAt: "asc" }, { filename: "asc" }],
+        },
+        comments: {
+          orderBy: {
+            createdAt: "asc",
+          },
+        },
       },
     });
   },
