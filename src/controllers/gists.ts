@@ -75,7 +75,29 @@ export async function updateGist(req: Request, res: Response) {
     res.status(200).json(gist);
   } catch (error) {
     if (error instanceof Prisma.PrismaClientKnownRequestError) {
-      console.log(error.code);
+      if (error.code === "P2025")
+        throw {
+          status: 404,
+          message: "Gist not found",
+          errors: [
+            {
+              path: "/params/id",
+              message: "No gist found with given id",
+            },
+          ],
+        };
+    } else throw error;
+  }
+}
+
+export async function deleteGist(req: Request, res: Response) {
+  const { id } = req.params;
+
+  try {
+    await Gist.delete(Number(id));
+    res.status(204).end();
+  } catch (error) {
+    if (error instanceof Prisma.PrismaClientKnownRequestError) {
       if (error.code === "P2025")
         throw {
           status: 404,

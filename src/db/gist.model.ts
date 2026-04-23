@@ -89,4 +89,8 @@ export default {
       },
     });
   },
+
+  async delete(id: Gist["id"]) {
+    return prisma.gist.delete({ where: { id } });
+  },
 };

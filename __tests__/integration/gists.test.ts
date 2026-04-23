@@ -187,3 +187,29 @@ describe("PATCH /gists/{id}", () => {
     expect(response.status).toBe(404);
   });
 });
+
+describe("DELETE /gists/{id}", () => {
+  beforeEach(async () => {
+    await prisma.gist.deleteMany();
+  });
+
+  it("returns 404 when no gist exist with given id", async () => {
+    const response = await request(app).delete("/gists/1");
+    expect(response.status).toBe(404);
+  });
+
+  it("deletes a gist", async () => {
+    const gist = await prisma.gist.create({
+      data: {
+        title: "test gist",
+        slug: "test-gist",
+        files: {
+          create: { filename: "test-file" },
+        },
+      },
+    });
+
+    const response = await request(app).delete(`/gists/${gist.id}`);
+    expect(response.status).toBe(204);
+  });
+});
