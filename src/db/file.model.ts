@@ -24,4 +24,26 @@ export default {
       },
     });
   },
+
+  async update(
+    id: Gist["id"],
+    filename: FileSubmission["filename"],
+    data: FileSubmission,
+  ) {
+    return prisma.gist.update({
+      where: { id },
+      data: {
+        files: {
+          update: {
+            where: { gistId_filename: { gistId: id, filename: filename } },
+            data: data,
+          },
+        },
+      },
+      include: {
+        files: true,
+        comments: true,
+      },
+    });
+  },
 };

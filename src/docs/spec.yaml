@@ -401,6 +401,24 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Gist"
+        400:
+          description: "Bad request"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        404:
+          description: "File not found"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        409:
+          description: "A File with same name already exists"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
     delete:
       tags:
         - Files
