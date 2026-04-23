@@ -3,6 +3,7 @@ import { join } from "path";
 import OpenApiValidator from "express-openapi-validator";
 import { apiReference } from "@scalar/express-api-reference";
 import gistRouter from "./routers/gists.ts";
+import filesRouter from "./routers/files.ts";
 import type { Application, Request, Response, NextFunction } from "express";
 
 const app: Application = express();
@@ -26,6 +27,7 @@ app.use(
 
 // Routers
 app.use("/gists", gistRouter);
+app.use("/gists/:id/files", filesRouter);
 
 // Error Handler
 app.use((err: any, req: Request, res: Response, next: NextFunction) => {
