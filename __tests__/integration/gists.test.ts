@@ -71,28 +71,8 @@ describe("POST /gists", () => {
 
   it("returns 400 when sending invalid data (Schema Validation)", async () => {
     const response = await request(app).post("/gists").send({});
-    // Handled by express-openapi-validator
     expect(response.status).toBe(400);
     expect(response.body.errors).toBeDefined();
-  });
-
-  it("creates and returns a new gist", async () => {
-    const response = await request(app)
-      .post("/gists")
-      .send({
-        title: "GiSt 1",
-        description: "Gist 1 description",
-        files: [
-          { filename: "file-1", content: "File 1 content" },
-          { filename: "file-2", content: "File 2 content" },
-        ],
-      });
-
-    expect(response.status).toBe(201);
-    expect(response.body.title).toBe("GiSt 1");
-    expect(response.body.slug).toBe("GiSt-1");
-    expect(response.body.files).toHaveLength(2);
-    expect(response.body.comments).toHaveLength(0);
   });
 
   it("returns 409 when gist with same title already exists", async () => {
@@ -115,6 +95,25 @@ describe("POST /gists", () => {
 
     expect(response.status).toBe(409);
   });
+
+  it("creates and returns a new gist", async () => {
+    const response = await request(app)
+      .post("/gists")
+      .send({
+        title: "GiSt 1",
+        description: "Gist 1 description",
+        files: [
+          { filename: "file-1", content: "File 1 content" },
+          { filename: "file-2", content: "File 2 content" },
+        ],
+      });
+
+    expect(response.status).toBe(201);
+    expect(response.body.title).toBe("GiSt 1");
+    expect(response.body.slug).toBe("GiSt-1");
+    expect(response.body.files).toHaveLength(2);
+    expect(response.body.comments).toHaveLength(0);
+  });
 });
 
 describe("GET /gists/{id}", () => {
@@ -127,7 +126,7 @@ describe("GET /gists/{id}", () => {
     expect(response.status).toBe(404);
   });
 
-  it("returns gist given id", async () => {
+  it("returns the gist with the given id", async () => {
     const gist = await prisma.gist.create({
       data: {
         title: "test gist",
@@ -159,6 +158,13 @@ describe("PATCH /gists/{id}", () => {
     expect(response.body.errors).toBeDefined();
   });
 
+  it("returns 404 when no gist exist with given id", async () => {
+    const response = await request(app)
+      .patch("/gists/1")
+      .send({ title: "test" });
+    expect(response.status).toBe(404);
+  });
+
   it("updates a given field of a gist", async () => {
     const gist = await prisma.gist.create({
       data: {
@@ -178,13 +184,6 @@ describe("PATCH /gists/{id}", () => {
     expect(response.body.slug).toBe("new-title");
     expect(response.body.files).toHaveLength(1);
     expect(response.body.comments).toHaveLength(0);
-  });
-
-  it("returns 404 when no gist exist with given id", async () => {
-    const response = await request(app)
-      .patch("/gists/1")
-      .send({ title: "test" });
-    expect(response.status).toBe(404);
   });
 });
 
