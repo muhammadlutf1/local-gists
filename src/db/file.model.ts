@@ -76,4 +76,10 @@ export default {
       },
     });
   },
+
+  delete(id: Gist["id"], filename: FileSubmission["filename"]) {
+    return prisma.file.delete({
+      where: { gistId_filename: { gistId: id, filename: filename } },
+    });
+  },
 };

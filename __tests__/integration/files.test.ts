@@ -163,3 +163,31 @@ describe("PATCH /gists/{id}/files/{filename}", () => {
     expect(response.body.files[0].content).toBe("new content");
   });
 });
+
+describe("DELETE /gists/{id}/files/{filename}", () => {
+  beforeEach(async () => {
+    await prisma.gist.deleteMany();
+  });
+
+  it("returns 404 when no gist exist with given id", async () => {
+    const response = await request(app).delete("/gists/1/files/test-file");
+    expect(response.status).toBe(404);
+  });
+
+  it("deletes a file", async () => {
+    const gist = await prisma.gist.create({
+      data: {
+        title: "test gist",
+        slug: "test-gist",
+        files: {
+          create: { filename: "test-file" },
+        },
+      },
+    });
+
+    const response = await request(app)
+      .delete(`/gists/${gist.id}/files/test-file`)
+      .send();
+    expect(response.status).toBe(204);
+  });
+});

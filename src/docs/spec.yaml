@@ -451,6 +451,12 @@ paths:
       responses:
         204:
           description: "No content"
+        404:
+          description: "File not found"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
 
   /gists/{id}/comments:
     post:
