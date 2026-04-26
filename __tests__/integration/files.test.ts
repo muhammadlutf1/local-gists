@@ -111,7 +111,7 @@ describe("PATCH /gists/{id}/files/{filename}", () => {
     expect(response.body.errors).toBeDefined();
   });
 
-  it("returns 404 when file exists with given filename and gist id", async () => {
+  it("returns 404 when no file exists with given filename and gist id", async () => {
     const response = await request(app)
       .patch("/gists/1/files/test-file")
       .send({ filename: "test" });
@@ -169,7 +169,7 @@ describe("DELETE /gists/{id}/files/{filename}", () => {
     await prisma.gist.deleteMany();
   });
 
-  it("returns 404 when no gist exist with given id", async () => {
+  it("returns 404 when no file exists with given filename and gist id", async () => {
     const response = await request(app).delete("/gists/1/files/test-file");
     expect(response.status).toBe(404);
   });

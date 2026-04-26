@@ -17,7 +17,7 @@ describe("POST /gists/{id}/comments", () => {
     expect(response.body.errors).toBeDefined();
   });
 
-  it("return 404 when no gist exist with given id", async () => {
+  it("returns 404 when no comment exists with given comment id and gist id", async () => {
     const response = await request(app)
       .post("/gists/1/comments")
       .send({ content: "test" });
