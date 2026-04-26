@@ -557,5 +557,9 @@ paths:
       responses:
         204:
           description: "No content"
-
-# TODO: Document error responses
+        404:
+          description: "Comment not found"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"

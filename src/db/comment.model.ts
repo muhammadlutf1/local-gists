@@ -46,4 +46,8 @@ export default {
       },
     });
   },
+
+  delete(id: Gist["id"], commentId: Comment["id"]) {
+    return prisma.comment.delete({ where: { id: commentId, gistId: id } });
+  },
 };

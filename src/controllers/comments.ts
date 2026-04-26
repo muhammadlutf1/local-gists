@@ -49,3 +49,28 @@ export async function updateComment(req: Request, res: Response) {
     } else throw error;
   }
 }
+
+export async function deleteComment(req: Request, res: Response) {
+  const { id, commentId } = req.params;
+
+  try {
+    await Comment.delete(Number(id), Number(commentId));
+    res.status(204).end();
+  } catch (error) {
+    if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      if (error.code === "P2025")
+        throw {
+          status: 404,
+          message: "Comment not found",
+          errors: [
+            {
+              path: "/params/id",
+            },
+            {
+              path: "/params/commentId",
+            },
+          ],
+        };
+    } else throw error;
+  }
+}

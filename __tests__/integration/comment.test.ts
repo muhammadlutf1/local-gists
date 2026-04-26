@@ -104,3 +104,47 @@ describe("PUT /gists/{id}/comments/{commentId}", () => {
     ).toBe("new content");
   });
 });
+
+describe("DELETE /gists/{id}/comments/{commentId}", () => {
+  beforeEach(async () => {
+    await prisma.gist.deleteMany();
+  });
+
+  it("returns 404 when no comment exists with given comment id and gist id", async () => {
+    const response = await request(app).delete("/gists/1/comments/1");
+    expect(response.status).toBe(404);
+  });
+
+  it("deletes a comment", async () => {
+    const gist = await prisma.gist.create({
+      data: {
+        title: "test gist",
+        slug: "test-gist",
+        files: {
+          create: { filename: "test-file" },
+        },
+        comments: {
+          createMany: {
+            data: [
+              { content: "old content" },
+              { content: "some other content" },
+            ],
+          },
+        },
+      },
+      include: {
+        comments: true,
+      },
+    });
+
+    const commentId = gist.comments.find(
+      (c) => c.content === "old content",
+    )!.id;
+
+    const response = await request(app).delete(
+      `/gists/${gist.id}/comments/${commentId}`,
+    );
+
+    expect(response.status).toBe(204);
+  });
+});
