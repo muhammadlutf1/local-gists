@@ -342,11 +342,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
+
     put:
       tags:
         - Files
       summary: Update files for a gist
-      description: "Bulk Updates (Overwrites) all files for a gist"
+      description: "🟨 Replaces (Overwrites) all files for a gist"
       parameters:
         - name: id
           in: path
@@ -364,12 +365,24 @@ paths:
                 $ref: "#/components/schemas/FileSubmission"
 
       responses:
-        201:
+        200:
           description: "Returns updated gist full data"
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Gist"
+        400:
+          description: "Bad request"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        404:
+          description: "Gist not found"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
 
   /gists/{id}/files/{filename}:
     patch:
@@ -419,6 +432,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
+
     delete:
       tags:
         - Files

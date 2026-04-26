@@ -41,8 +41,38 @@ export default {
         },
       },
       include: {
-        files: true,
-        comments: true,
+        files: {
+          orderBy: [{ createdAt: "asc" }, { filename: "asc" }],
+        },
+        comments: {
+          orderBy: {
+            createdAt: "asc",
+          },
+        },
+      },
+    });
+  },
+
+  async updateAll(id: Gist["id"], data: FileSubmission[]) {
+    return prisma.gist.update({
+      where: { id },
+      data: {
+        files: {
+          deleteMany: {},
+          createMany: {
+            data,
+          },
+        },
+      },
+      include: {
+        files: {
+          orderBy: [{ createdAt: "asc" }, { filename: "asc" }],
+        },
+        comments: {
+          orderBy: {
+            createdAt: "asc",
+          },
+        },
       },
     });
   },
