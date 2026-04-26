@@ -4,6 +4,7 @@ import OpenApiValidator from "express-openapi-validator";
 import { apiReference } from "@scalar/express-api-reference";
 import gistRouter from "./routers/gists.ts";
 import filesRouter from "./routers/files.ts";
+import commentsRouter from "./routers/comments.ts";
 import type { Application, Request, Response, NextFunction } from "express";
 
 const app: Application = express();
@@ -28,6 +29,7 @@ app.use(
 // Routers
 app.use("/gists", gistRouter);
 app.use("/gists/:id/files", filesRouter);
+app.use("/gists/:id/comments", commentsRouter);
 
 // Error Handler
 app.use((err: any, req: Request, res: Response, next: NextFunction) => {
