@@ -73,7 +73,7 @@ API docs are available at `/docs`.
 Integration tests run against a real PostgreSQL database. Make sure your database is running before running tests.
 
 ```bash
-pnpm dev
+pnpm test
 ```
 
 Tests use Supertest to fire actual HTTP requests through the full Express middleware stack, including OpenAPI validation.
