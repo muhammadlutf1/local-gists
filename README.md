@@ -55,7 +55,7 @@ DATABASE_URL="postgresql://USER:PASSWORD@localhost:5432/local_gists_test"
 ### Database Setup
 
 ```bash
-pnpm prisma migrate dev
+prisma migrate dev
 ```
 
 ### Run the Server
